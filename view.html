@@ -12,7 +12,6 @@
 
 </head>
 
-
 <body>
 
   <div class="container">
@@ -20,7 +19,8 @@
       <h1>Star Wars Express</h1>
       <h3>The greatest resource in the galaxy for Star Wars statistics!</h3>
       <hr>
-      <button class="btn btn-danger btn-lg"><span class="fa fa-plus"></span> Add New Character</button>
+      <a href="add.html"><button class="btn btn-danger btn-lg"><span class="fa fa-plus">
+        </span> Add New Character</button></a>
     </div>
     <div class="row">
 
@@ -58,46 +58,29 @@
   </div>
 
   <script type="text/javascript">
+    
     $("#search-btn").on("click", () => {
-        $("name").empty();
-        $("stats").empty();
-        let searchedCharacter = $("character-search").val().trim();
+      let searchedCharacter = $("#character-search").val().trim();
 
-        searchedCharacter = searchedCharacter.replaced(/\s+/g, "").toLowerCase();
+      // searchedCharacter = searchedCharacter.replace(/\s+/g, "").toLowerCase();
+      searchedCharacter = searchedCharacter.split(" ").join("").toLowerCase();
 
-        $.get("/api/characters/" + searchedCharacter, (data) => {
-            if(data.routeName) {
-                console.log(data);
-                $("#stats").show();
-                $("#name").text(data.name);
-                $("#role").text(data.role);
-                $("#age").text(data.age);
-                $("#force-points").text(data.forcePoints);
-            } else {
-                console.log("not found");
-                $("#name").text("The force is not strong with this one. Character not found");
-                $("#stats").hide();
-            }
-            });
-        });
+      $.get("/api/characters/" + searchedCharacter, (data) => {
+        if(data.routeName) {
+          console.log(data);
+          $("#stats").show();
+          $("#name").text(data.name);
+          $("#role").text(data.role);
+          $("#age").text(data.age);
+          $("#force-points").text(data.forcePoints);
+        } else {
+          console.log("not found");
+          $("#name").text("The force is not strong with this one. You character was not found.");
+          $("#stats").hide();
+        }
+      });
 
-      $("#add-btn").on("click", (event) => {
-        event.preventDefault();
-
-        const newCharacter = {
-          name: $("#name").val().trim(),
-          role: $("#role").val().trim(),
-          age: $("#age").val().trim(),
-          forcePoints: $("#force-points").val().trim()
-        };
-
-        $.post("/api/characters", newCharacter)
-          .then((data) => {
-            alert(data.name + "added.");
-          });
-      })
-
-
+    });
   </script>
 
 </body>
